@@ -31,7 +31,7 @@ export const onIncompletePaymentFound = (payment) => {
 export const onReadyForApproval = async (paymentId, paymentConfig) => {
     //make POST request to your app server /payments/approve endpoint with paymentId in the body
     
-    const { data, status } = await axios.post('/payments/approve', {
+    const { data, status } = await axios.post('/pi/approve', {
         paymentId,
         paymentConfig
     })
@@ -50,7 +50,7 @@ export const onReadyForApproval = async (paymentId, paymentConfig) => {
 
 export const onReadyForCompletion = async (paymentId, txid) => {
     //make POST request to your app server /payments/complete endpoint with paymentId and txid in the body
-    const { body, status } = await axios.post('/payments/complete', {
+    const { body, status } = await axios.post('/pi/complete', {
         paymentId, 
         txid
     })

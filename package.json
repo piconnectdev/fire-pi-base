@@ -7,6 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "cd public && webpack serve --mode=development",
     "build": "cd public && webpack --mode=production",
+    "start": "cd public && webpack serve --mode=production",
     "deploy": "cd public && webpack --mode=production && cd ../ && firebase deploy"
   },
   "repository": {
@@ -22,5 +23,10 @@
   "bugs": {
     "url": "https://github.com/dannybutterfield1880/fire-pi-base/issues"
   },
-  "homepage": "https://github.com/dannybutterfield1880/fire-pi-base#readme"
+  "homepage": "https://github.com/dannybutterfield1880/fire-pi-base#readme",
+  "dependencies": {
+    "webpack": "^5.45.1",
+    "webpack-cli": "^4.7.2",
+    "webpack-dev-server": "^3.11.2"
+  }
 }

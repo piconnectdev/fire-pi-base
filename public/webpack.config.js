@@ -141,7 +141,9 @@ module.exports = (env, argv) => {
       // overlay: true,
       disableHostCheck: true,
       hot: true,
-      contentBase: '/'
+      port: 8008,
+      host: '0.0.0.0',
+      contentBase: '/opt/wepi.social'
     },
     resolve: {
       extensions: [".js", ".jsx"]
