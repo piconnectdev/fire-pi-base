@@ -1,38 +1,112 @@
 import axios from './axios';
 
 const Pi = window.Pi;
-
+var piUser;
 export const authenticatePiUser = async () => {
     // Identify the user with their username / unique network-wide ID, and get permission to request payments from them.
-    const scopes = ['payments'];
+    const scopes = ['username','payments'];
     
     try{
-        return await Pi.authenticate(scopes, onIncompletePaymentFound);
+        piUser = await Pi.authenticate(scopes, onIncompletePaymentFound);
+	return piUser;
+
     } catch(err) {
         console.log(err)
+    }
+}
+
+export const onIncompletePaymentFound = async (payment) => { 
+    //do something with incompleted payment
+    console.log('incomplete payment found: ', payment) 
+
+    const { data, status } = await axios.post('/pi/found', {
+        payment
+    })
+
+    if (status === 500) {
+        //there was a problem approving this payment show user body.message from server
+        alert(`${body.status}: ${body.message}`);
+        return false;
+    } 
+
+    if (status === 200) {
+        //payment was approved continue with flow
+        return data;
+    }
+}; // Read more about this in the SDK reference
+
+export const createPiRegister = async (info, config) => {
+    Pi.createPayment(config, {
+        // Callbacks you need to implement - read more about those in the detailed docs linked below:
+        onReadyForServerApproval: (payment_id) => onReadyForApprovalRegister(payment_id, info, config),
+        onReadyForServerCompletion:(payment_id, txid) => onReadyForCompletionRegister(payment_id, txid, info, config),
+        onCancel,
+        onError,
+      });
+}
+
+export const onReadyForApprovalRegister = async (payment_id, info, paymentConfig) => {
+    //make POST request to your app server /payments/approve endpoint with paymentId in the body
+    
+    const { data, status } = await axios.post('/pi/agree', {
+	    paymentid: payment_id,
+	    pi_username: piUser.user.username,
+	    pi_uid: piUser.user.uid,
+	    info,
+            paymentConfig
+    })
+
+    if (status === 500) {
+        //there was a problem approving this payment show user body.message from server
+        alert(`${body.status}: ${body.message}`);
+        return false;
+    } 
+
+    if (status === 200) {
+        //payment was approved continue with flow
+        return data;
+    }
+}
+
+// Update or change password
+export const onReadyForCompletionRegister = async (payment_id, txid, info, paymentConfig) => {
+    //make POST request to your app server /payments/complete endpoint with paymentId and txid in the body
+    const { body, status } = await axios.post('/pi/register', {
+        paymentid: payment_id,
+        pi_username: piUser.user.username,
+        pi_uid: piUser.user.uid,
+        txid,
+	info,
+	paymentConfig,
+    })
+
+    if (status === 500) {
+        //there was a problem completing this payment show user body.message from server
+        alert(`${body.status}: ${body.message}`);
+        return false;
+    } 
+
+    if (status === 200) {
+        //payment was completed continue with flow
+        return true;
     }
 }
 
 export const createPiPayment = async (config) => {
     Pi.createPayment(config, {
         // Callbacks you need to implement - read more about those in the detailed docs linked below:
-        onReadyForServerApproval: (paymentId) => onReadyForApproval(paymentId, config),
+        onReadyForServerApproval: (payment_id) => onReadyForApproval(payment_id, config),
         onReadyForServerCompletion: onReadyForCompletion,
         onCancel,
         onError,
       });
 }
 
-export const onIncompletePaymentFound = (payment) => { 
-    //do something with incompleted payment
-    console.log('incomplete payment found: ', payment) 
-}; // Read more about this in the SDK reference
-
-export const onReadyForApproval = async (paymentId, paymentConfig) => {
+export const onReadyForApproval = async (payment_id, paymentConfig) => {
     //make POST request to your app server /payments/approve endpoint with paymentId in the body
     
     const { data, status } = await axios.post('/pi/approve', {
-        paymentId,
+        payment_id,
         paymentConfig
     })
 
@@ -48,10 +122,10 @@ export const onReadyForApproval = async (paymentId, paymentConfig) => {
     }
 }
 
-export const onReadyForCompletion = async (paymentId, txid) => {
+export const onReadyForCompletion = async (payment_id, txid) => {
     //make POST request to your app server /payments/complete endpoint with paymentId and txid in the body
     const { body, status } = await axios.post('/pi/complete', {
-        paymentId, 
+        payment_id, 
         txid
     })
 

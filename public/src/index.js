@@ -1,27 +1,28 @@
 import React, { useState, useEffect, Fragment } from 'react'
 import { render } from 'react-dom'
-import { createPiPayment, authenticatePiUser, openPiShareDialog } from './services/pi';
+import { createPiRegister, createPiPayment, authenticatePiUser, openPiShareDialog } from './services/pi';
 import { makeStyles, Button, Container, Grid, TextField, CircularProgress, Typography, Paper, AppBar } from '@material-ui/core'
 import { Alert } from '@material-ui/lab'
 
-//import './utils/pi-mock';
+import './utils/pi-mock';
 
 const isDev = process.env.NODE_ENV === 'development';
 window.isDev = isDev;
 
-// window.PiMockConfig = {
-//     production_domain: isDev ? false : 'https://firepi-react.web.app',
-//     debug: isDev,
-//     username: 'john_doe',
-//     uid: '12345678-1234-414e-b578-42e89d1f3c02',
-//     payment_found: {
-//         amount: 1, // Amount of π to be paid
-//         memo: "Please pay for your order #12345", // User-facing explanation of the payment
-//         metadata: {orderId: 12345}, // Developer-facing metadata
-//     },
-//     payment_error: 'There has been an error with your payment',
-//     payment_cancelled: 'Your payment was cancelled',
-// }
+window.PiMockConfig = {
+     production_domain: isDev ? 'https://wepi.social' : 'https://wepi.social',
+//     production_domain: false,
+     debug: isDev,
+     username: 'john_doe',
+     uid: '12345678-1234-414e-b578-42e89d1f3c02',
+     //payment_found: {
+     //    amount: 1, // Amount of π to be paid
+     //    memo: "Please pay for your order #12345", // User-facing explanation of the payment
+     //    metadata: {orderId: 12345}, // Developer-facing metadata
+     //},
+     payment_error: false, //'There has been an error with your payment',
+     payment_cancelled: false, //'Your payment was cancelled',
+}
 
 const useStyles = makeStyles((theme) => ({
     root: {},
@@ -79,6 +80,8 @@ const App = () => {
     const [walletKey, setWalletKey] = useState('');
     const [inPiBrowser, setInPiBrowser] = useState(null);
     const [piUser, setPiUser] = useState(null);
+    const [usernameToTransfer, setUserNameToTransfer] = useState('');
+    const [passwordToTransfer, setPasswordToTransfer] = useState('');
 
     const classes = useStyles();
 
@@ -113,31 +116,69 @@ const App = () => {
         }
     }, [apiResponse])
 
-    const testPayment = async (e) => {
+    const piPayment = async (e) => {
         e.preventDefault();
         setLoading(true);
-
         //create pi network payment
-        await createPiPayment({
+        var config = {	
             amount: amountToTransfer,
-            memo: 'Sample Transfer',
+            memo: 'wepi:payment',
             metadata: {
-                orderId: 123
+                receipt_name: "",
+                comment: "Comment",
             }
-        });
+        };
+	console.log(config);
+	console.log("TEST PAYMENT "+usernameToTransfer + " " + amountToTransfer);
+        await createPiPayment(config);
 
-        if (isDev) {
-            setApiResponse({
-                message: 'Payment complete!',
-                status: 'success'
-            });
-        }
+        //if (isDev) {
+        //    setApiResponse({
+        //        message: 'Payment complete!',
+        //        status: 'success'
+        //    });
+        //}
+        
+        setLoading(false);
+    }
+
+    const piRegister = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        //create pi network payment
+        var config = {	
+            amount: amountToTransfer,
+            memo: 'wepi:account',
+            metadata: {
+                ref_id: "12345678-1234-414e-b578-42e89d1f3c03",
+            }
+        };
+	// create user register info
+	var info = {
+            username: usernameToTransfer,
+	    password: passwordToTransfer,
+            show_nsfw: true,
+	    email: null,
+	    captcha_uuid: null,
+	    captcha_answer: null,
+	};
+	console.log(info);
+	console.log(config);
+	console.log("TEST REGISTER FOR "+usernameToTransfer + " " + passwordToTransfer);
+        await createPiRegister(info, config);
+
+        //if (isDev) {
+        //    setApiResponse({
+        //        message: 'Payment complete!',
+        //        status: 'success'
+        //    });
+        //}
         
         setLoading(false);
     }
 
     const openDialog = () => {
-        openPiShareDialog('Hello World', 'This is my first pi dialog')
+        openPiShareDialog('WePi', 'This is my first pi dialog')
     }
 
     return (
@@ -150,7 +191,7 @@ const App = () => {
                 )
             }
             <AppBar variant="elevation" position="static" className={classes.appBar}>
-                <h2>FirePi</h2>
+                <h2>WePi</h2>
             </AppBar>
             <Container maxWidth={'xs'}>
                 <Grid item xs={12}>
@@ -174,21 +215,11 @@ const App = () => {
 
                         <img className={classes.logoImg} height="50" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9Ii0xMS41IC0xMC4yMzE3NCAyMyAyMC40NjM0OCI+CiAgPHRpdGxlPlJlYWN0IExvZ288L3RpdGxlPgogIDxjaXJjbGUgY3g9IjAiIGN5PSIwIiByPSIyLjA1IiBmaWxsPSIjNjFkYWZiIi8+CiAgPGcgc3Ryb2tlPSIjNjFkYWZiIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiPgogICAgPGVsbGlwc2Ugcng9IjExIiByeT0iNC4yIi8+CiAgICA8ZWxsaXBzZSByeD0iMTEiIHJ5PSI0LjIiIHRyYW5zZm9ybT0icm90YXRlKDYwKSIvPgogICAgPGVsbGlwc2Ugcng9IjExIiByeT0iNC4yIiB0cmFuc2Zvcm09InJvdGF0ZSgxMjApIi8+CiAgPC9nPgo8L3N2Zz4K"/>
                     </div>  
-                        <p>A simple boilerplate for building React Pi Network web apps that run on Firebase (Google cloud platform)</p>
-                        <p>FirePi bundles the below list of technologies:</p>
-                        <ul className={classes.linkList}>
-                            <li><a target="_blank" href="https://firebase.google.com">Firebase</a> (<a target="_blank" href="https://firebase.google.com/docs">documentation</a>)</li>
-                            <li><a target="_blank" href="https://minepi.com">Pi Network</a> (<a target="_blank" href="https://github.com/pi-apps/pi-platform-docs">documentation</a>)</li>
-                            <li><a target="_blank" href="https://reactjs.org">React</a></li>
-                            <li><a target="_blank" href="https://material-ui.com">Material UI</a></li>
-                        </ul>
-                        <p className={classes.mb1}>You can view the full repository for this code here: <a target="_blank" href="https://github.com/dannybutterfield1880/fire-pi-base">FirePi</a></p>
-
                     </section>
                     <hr className={classes.mb1} />
                     <Paper className={[classes.paper, classes.mb1]}>
                         <div style={{ margin: '0 0 1em' }}>
-                            <Typography>Test Payment</Typography>
+                            <Typography>Registration / Reset Password</Typography>
                         </div>
                         
                         {
@@ -198,11 +229,13 @@ const App = () => {
                                 </div>
                             )
                         }
-                        <form onSubmit={testPayment} className={classes.form}>
-                            <small className={classes.mb1}>This will transfer {amountToTransfer < 0.1 ? 'the requested amount of ' : `${amountToTransfer} `} test-π to our development test wallet</small>
+                        <form onSubmit={piRegister} className={classes.form}>
+                            <small className={classes.mb1}>This will transfer {amountToTransfer < 0.1 ? 'the requested amount of ' : `${amountToTransfer} `} test-π to our development test wallet for registration</small>
                             {/* <TextField className={classes.mb1} type="text" fullWidth variant="outlined" label="Wallet to send Pi to" value={walletKey} onChange={(e) => setWalletKey(e.target.value)} /> */}
-                            <TextField className={classes.mb1} type="number" fullWidth variant="outlined" label="Amount to pay" value={amountToTransfer} onChange={(e) => setAmountToTransfer(e.target.value)} />
-                            <Button variant="text" fullWidth type="submit">Transfer</Button>
+                            <TextField className={classes.mb1} type="text" fullWidth variant="outlined" label="Your's WePi UserName" value={usernameToTransfer} onChange={(e) => setUserNameToTransfer(e.target.value)} />
+                            <TextField className={classes.mb1} type="password" fullWidth variant="outlined" label="Your's WePi Password" value={passwordToTransfer} onChange={(e) => setPasswordToTransfer(e.target.value)} />
+                            <TextField className={classes.mb1} type="number" fullWidth variant="outlined" label="Amount to pay for registration (0.001 PI)" value={amountToTransfer} onChange={(e) => setAmountToTransfer(e.target.value)} />
+                            <Button variant="text" fullWidth type="submit">Register</Button>
                         </form>
                     </Paper>
                      

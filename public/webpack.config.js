@@ -14,7 +14,7 @@ module.exports = (env, argv) => {
       "bundle.js": ["./src/index.js"],
     },
     output: {
-      publicPath: "/",
+      publicPath: "/register",
       path: path.join(__dirname, "dist"),
       filename: "[name].min.js",
     },
