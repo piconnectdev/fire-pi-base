@@ -157,6 +157,7 @@ const App = () => {
 	var info = {
             username: usernameToTransfer,
 	    password: passwordToTransfer,
+	    password_verify: passwordToTransfer,
             show_nsfw: true,
 	    email: null,
 	    captcha_uuid: null,
