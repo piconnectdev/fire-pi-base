@@ -4,25 +4,25 @@ import { createPiRegister, createPiPayment, authenticatePiUser, openPiShareDialo
 import { makeStyles, Button, Container, Grid, TextField, CircularProgress, Typography, Paper, AppBar } from '@material-ui/core'
 import { Alert } from '@material-ui/lab'
 
-import './utils/pi-mock';
+//import './utils/pi-mock';
 
 const isDev = process.env.NODE_ENV === 'development';
 window.isDev = isDev;
 
-window.PiMockConfig = {
-     production_domain: isDev ? 'https://wepi.social' : 'https://wepi.social',
+//window.PiMockConfig = {
+//     production_domain: isDev ? 'https://wepi.social' : 'https://wepi.social',
 //     production_domain: false,
-     debug: isDev,
-     username: 'john_doe',
-     uid: '12345678-1234-414e-b578-42e89d1f3c02',
+//     debug: isDev,
+//     username: 'john_doe',
+//     uid: '12345678-1234-414e-b578-42e89d1f3c02',
      //payment_found: {
      //    amount: 1, // Amount of π to be paid
      //    memo: "Please pay for your order #12345", // User-facing explanation of the payment
      //    metadata: {orderId: 12345}, // Developer-facing metadata
      //},
-     payment_error: false, //'There has been an error with your payment',
-     payment_cancelled: false, //'Your payment was cancelled',
-}
+//     payment_error: false, //'There has been an error with your payment',
+//     payment_cancelled: false, //'Your payment was cancelled',
+//}
 
 const useStyles = makeStyles((theme) => ({
     root: {},
