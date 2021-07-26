@@ -20,7 +20,11 @@ export const onIncompletePaymentFound = async (payment) => {
     console.log('incomplete payment found: ', payment) 
 
     const { data, status } = await axios.post('/pi/found', {
-        payment
+        paymentid: payment.identifier,
+	    pi_username: piUser.user.username,
+	    pi_uid: piUser.user.uid,
+        auth: null,
+        dto: payment
     })
 
     if (status === 500) {
@@ -53,7 +57,7 @@ export const onReadyForApprovalRegister = async (payment_id, info, paymentConfig
 	    pi_username: piUser.user.username,
 	    pi_uid: piUser.user.uid,
 	    info,
-            paymentConfig
+        paymentConfig
     })
 
     if (status === 500) {
@@ -76,8 +80,8 @@ export const onReadyForCompletionRegister = async (payment_id, txid, info, payme
         pi_username: piUser.user.username,
         pi_uid: piUser.user.uid,
         txid,
-	info,
-	paymentConfig,
+	    info,
+	    paymentConfig,
     })
 
     if (status === 500) {
