@@ -13,7 +13,7 @@ window.isDev = isDev;
 //     production_domain: isDev ? 'https://wepi.social' : 'https://wepi.social',
 //     production_domain: false,
 //     debug: isDev,
-//     username: 'john_doe',
+//     username: 'wepi',
 //     uid: '12345678-1234-414e-b578-42e89d1f3c02',
      //payment_found: {
      //    amount: 1, // Amount of π to be paid
@@ -128,8 +128,6 @@ const App = () => {
                 comment: "Comment",
             }
         };
-	console.log(config);
-	console.log("TEST PAYMENT "+usernameToTransfer + " " + amountToTransfer);
         await createPiPayment(config);
 
         //if (isDev) {
@@ -147,7 +145,7 @@ const App = () => {
         setLoading(true);
         //create pi network payment
         var config = {	
-            amount: amountToTransfer,
+            amount: amountToTransfer < 0.01? 0.01: amountToTransfer,
             memo: 'wepi:account',
             metadata: {
                 ref_id: "12345678-1234-414e-b578-42e89d1f3c03",
@@ -163,9 +161,6 @@ const App = () => {
 	    captcha_uuid: null,
 	    captcha_answer: null,
 	};
-	console.log(info);
-	console.log(config);
-	console.log("TEST REGISTER FOR "+usernameToTransfer + " " + passwordToTransfer);
         await createPiRegister(info, config);
 
         //if (isDev) {
@@ -209,12 +204,9 @@ const App = () => {
                     }
                     <section className={classes.mb1}>
                     <div className={classes.logoArea}>
-                        <img className={classes.logoImg} width="50" src="https://cdn.freebiesupply.com/logos/large/2x/firebase-1-logo-png-transparent.png"/>
+                        <img className={classes.logoImg} width="50" src="data:image/png;base64,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"/>
                         <span>+</span>
                         <img className={classes.logoImg} height="50" src="https://minepi.com/assets/logo-667cd4f63cb2e6f261e16560dea7ac9c9235dcfaf9a285274a576efc96b9ec79.png"/>
-                        <span>+</span>
-
-                        <img className={classes.logoImg} height="50" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9Ii0xMS41IC0xMC4yMzE3NCAyMyAyMC40NjM0OCI+CiAgPHRpdGxlPlJlYWN0IExvZ288L3RpdGxlPgogIDxjaXJjbGUgY3g9IjAiIGN5PSIwIiByPSIyLjA1IiBmaWxsPSIjNjFkYWZiIi8+CiAgPGcgc3Ryb2tlPSIjNjFkYWZiIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiPgogICAgPGVsbGlwc2Ugcng9IjExIiByeT0iNC4yIi8+CiAgICA8ZWxsaXBzZSByeD0iMTEiIHJ5PSI0LjIiIHRyYW5zZm9ybT0icm90YXRlKDYwKSIvPgogICAgPGVsbGlwc2Ugcng9IjExIiByeT0iNC4yIiB0cmFuc2Zvcm09InJvdGF0ZSgxMjApIi8+CiAgPC9nPgo8L3N2Zz4K"/>
                     </div>  
                     </section>
                     <hr className={classes.mb1} />
