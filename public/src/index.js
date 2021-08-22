@@ -15,11 +15,11 @@ window.isDev = isDev;
 //     debug: isDev,
 //     username: 'wepi',
 //     uid: '12345678-1234-414e-b578-42e89d1f3c02',
-     //payment_found: {
-     //    amount: 1, // Amount of π to be paid
-     //    memo: "Please pay for your order #12345", // User-facing explanation of the payment
-     //    metadata: {orderId: 12345}, // Developer-facing metadata
-     //},
+//payment_found: {
+//    amount: 1, // Amount of π to be paid
+//    memo: "Please pay for your order #12345", // User-facing explanation of the payment
+//    metadata: {orderId: 12345}, // Developer-facing metadata
+//},
 //     payment_error: false, //'There has been an error with your payment',
 //     payment_cancelled: false, //'Your payment was cancelled',
 //}
@@ -64,12 +64,12 @@ const useStyles = makeStyles((theme) => ({
         padding: 0,
         margin: '0 0 1em 0'
     },
-    form: { 
-        display: 'flex', 
-        width: '100%', 
-        flexDirection: 'column', 
-        alignItems: 'center', 
-        justifyContent: 'space-between' 
+    form: {
+        display: 'flex',
+        width: '100%',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'space-between'
     }
 }))
 
@@ -99,7 +99,7 @@ const App = () => {
         }
 
         //clean up not neccessary
-        return () => {}
+        return () => { }
     }, [])
 
     //on apiResponse updated
@@ -108,7 +108,7 @@ const App = () => {
             //clear apiResponse after 2 seconds
             setApiResponse(null)
         }, 5000)
-        
+
         //clean up
         return () => {
             //clear timeout if it has not already finished
@@ -120,7 +120,7 @@ const App = () => {
         e.preventDefault();
         setLoading(true);
         //create pi network payment
-        var config = {	
+        var config = {
             amount: amountToTransfer,
             memo: 'wepi:payment',
             metadata: {
@@ -136,7 +136,7 @@ const App = () => {
         //        status: 'success'
         //    });
         //}
-        
+
         setLoading(false);
     }
 
@@ -144,23 +144,23 @@ const App = () => {
         e.preventDefault();
         setLoading(true);
         //create pi network payment
-        var config = {	
-            amount: amountToTransfer < 0.01? 0.01: amountToTransfer,
+        var config = {
+            amount: amountToTransfer < 0.01 ? 0.01 : amountToTransfer,
             memo: 'wepi:account',
             metadata: {
                 ref_id: "12345678-1234-414e-b578-42e89d1f3c03",
             }
         };
-	// create user register info
-	var info = {
+        // create user register info
+        var info = {
             username: usernameToTransfer,
-	    password: passwordToTransfer,
-	    password_verify: passwordToTransfer,
+            password: passwordToTransfer,
+            password_verify: passwordToTransfer,
             show_nsfw: true,
-	    email: null,
-	    captcha_uuid: null,
-	    captcha_answer: null,
-	};
+            email: null,
+            captcha_uuid: null,
+            captcha_answer: null,
+        };
         await createPiRegister(info, config);
 
         //if (isDev) {
@@ -169,7 +169,7 @@ const App = () => {
         //        status: 'success'
         //    });
         //}
-        
+
         setLoading(false);
     }
 
@@ -186,7 +186,7 @@ const App = () => {
                     </div>
                 )
             }
-            <AppBar variant="elevation" position="static" className={classes.appBar}>
+            <AppBar style={{ backgroundColor: '#320096' }} variant="elevation" position="static" className={classes.appBar}>
                 <h2>WePi</h2>
             </AppBar>
             <Container maxWidth={'xs'}>
@@ -203,18 +203,18 @@ const App = () => {
                         )
                     }
                     <section className={classes.mb1}>
-                    <div className={classes.logoArea}>
-                        <img className={classes.logoImg} width="50" src="data:image/png;base64,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"/>
-                        <span>+</span>
-                        <img className={classes.logoImg} height="50" src="https://minepi.com/assets/logo-667cd4f63cb2e6f261e16560dea7ac9c9235dcfaf9a285274a576efc96b9ec79.png"/>
-                    </div>  
+                        <div className={classes.logoArea}>
+                            <img className={classes.logoImg} width="50" src="data:image/png;base64,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" />
+                            <span>+</span>
+                            <img className={classes.logoImg} height="50" src="https://minepi.com/assets/logo-667cd4f63cb2e6f261e16560dea7ac9c9235dcfaf9a285274a576efc96b9ec79.png" />
+                        </div>
                     </section>
                     <hr className={classes.mb1} />
                     <Paper className={[classes.paper, classes.mb1]}>
                         <div style={{ margin: '0 0 1em' }}>
                             <Typography>Registration / Reset Password</Typography>
                         </div>
-                        
+
                         {
                             apiResponse && (
                                 <div className={classes.mb1}>
@@ -227,15 +227,15 @@ const App = () => {
                             {/* <TextField className={classes.mb1} type="text" fullWidth variant="outlined" label="Wallet to send Pi to" value={walletKey} onChange={(e) => setWalletKey(e.target.value)} /> */}
                             <TextField className={classes.mb1} type="text" fullWidth variant="outlined" label="Your's WePi UserName" value={usernameToTransfer} onChange={(e) => setUserNameToTransfer(e.target.value)} />
                             <TextField className={classes.mb1} type="password" fullWidth variant="outlined" label="Your's WePi Password" value={passwordToTransfer} onChange={(e) => setPasswordToTransfer(e.target.value)} />
-                            <TextField className={classes.mb1} type="number" fullWidth variant="outlined" label="Amount to pay for registration (0.001 PI)" value={amountToTransfer} onChange={(e) => setAmountToTransfer(e.target.value)} />
+                            <TextField className={classes.mb1} type="hidden" fullWidth variant="outlined" label="Amount to pay for registration (0.001 PI)" value={amountToTransfer} onChange={(e) => setAmountToTransfer(e.target.value)} />
                             <Button variant="text" fullWidth type="submit">Register</Button>
                         </form>
                     </Paper>
-                     
+
                 </Grid>
             </Container>
         </Fragment>
-        
+
     )
 }
 
