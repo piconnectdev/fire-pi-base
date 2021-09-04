@@ -225,9 +225,8 @@ const App = () => {
                         <form onSubmit={piRegister} className={classes.form}>
                             <small className={classes.mb1}>This will transfer {amountToTransfer < 0.1 ? 'the requested amount of ' : `${amountToTransfer} `} test-π to our development test wallet for registration</small>
                             {/* <TextField className={classes.mb1} type="text" fullWidth variant="outlined" label="Wallet to send Pi to" value={walletKey} onChange={(e) => setWalletKey(e.target.value)} /> */}
-                            <TextField className={classes.mb1} type="text" fullWidth variant="outlined" label="Your's WePi UserName" value={usernameToTransfer} onChange={(e) => setUserNameToTransfer(e.target.value)} />
-                            <TextField className={classes.mb1} type="password" fullWidth variant="outlined" label="Your's WePi Password" value={passwordToTransfer} onChange={(e) => setPasswordToTransfer(e.target.value)} />
-                            <TextField className={classes.mb1} type="hidden" fullWidth variant="outlined" label="Amount to pay for registration (0.001 PI)" value={amountToTransfer} onChange={(e) => setAmountToTransfer(e.target.value)} />
+                            <TextField className={classes.mb1} type="text" fullWidth variant="outlined" label="Your WePi UserName" value={usernameToTransfer} onChange={(e) => setUserNameToTransfer(e.target.value)} />
+                            <TextField className={classes.mb1} type="password" fullWidth variant="outlined" label="Your WePi Password" value={passwordToTransfer} onChange={(e) => setPasswordToTransfer(e.target.value)} />
                             <Button variant="text" fullWidth type="submit">Register</Button>
                         </form>
                     </Paper>
