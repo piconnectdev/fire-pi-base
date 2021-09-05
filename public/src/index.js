@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment } from 'react'
 import { render } from 'react-dom'
-import { createPiRegister, createPiPayment, authenticatePiUser, openPiShareDialog } from './services/pi';
+import { createPiRegister, createPiPayment, authenticatePiUser, openPiShareDialog, piApiResult } from './services/pi';
 import { makeStyles, Button, Container, Grid, TextField, CircularProgress, Typography, Paper, AppBar } from '@material-ui/core'
 import { Alert } from '@material-ui/lab'
 
@@ -110,8 +110,14 @@ const App = () => {
     useEffect(() => {
         const timeout = setTimeout(() => {
             //clear apiResponse after 2 seconds
+            piResult = piApiResult();
+            if (piResult !== null) {
+                if (piResult["success"] === true) {
+                    window.location = "https://wepi.social";
+                }
+            }
             setApiResponse(null)
-        }, 5000)
+        }, 3000)
 
         //clean up
         return () => {
