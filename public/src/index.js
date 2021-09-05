@@ -70,6 +70,10 @@ const useStyles = makeStyles((theme) => ({
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'space-between'
+    },
+    taga: {
+        color: "#fff",
+        textDecoration: "underline black"
     }
 }))
 
@@ -187,7 +191,7 @@ const App = () => {
                 )
             }
             <AppBar style={{ backgroundColor: '#320096' }} variant="elevation" position="static" className={classes.appBar}>
-                <h2>WePi</h2>
+                <h2><a href="https://wepi.social" className={classes.taga}>WePi</a></h2>
             </AppBar>
             <Container maxWidth={'xs'}>
                 <Grid item xs={12}>
@@ -225,8 +229,8 @@ const App = () => {
                         <form onSubmit={piRegister} className={classes.form}>
                             <small className={classes.mb1}>This will transfer {amountToTransfer < 0.1 ? 'the requested amount of ' : `${amountToTransfer} `} test-π to our development test wallet for registration</small>
                             {/* <TextField className={classes.mb1} type="text" fullWidth variant="outlined" label="Wallet to send Pi to" value={walletKey} onChange={(e) => setWalletKey(e.target.value)} /> */}
-                            <TextField className={classes.mb1} type="text" fullWidth variant="outlined" label="Your WePi UserName" value={usernameToTransfer} onChange={(e) => setUserNameToTransfer(e.target.value)} />
-                            <TextField className={classes.mb1} type="password" fullWidth variant="outlined" label="Your WePi Password" value={passwordToTransfer} onChange={(e) => setPasswordToTransfer(e.target.value)} />
+                            <TextField className={classes.mb1} type="text" fullWidth variant="outlined" label="Your WePi’s Username" value={usernameToTransfer} onChange={(e) => setUserNameToTransfer(e.target.value)} />
+                            <TextField className={classes.mb1} type="password" fullWidth variant="outlined" label="Your WePi’s Password" value={passwordToTransfer} onChange={(e) => setPasswordToTransfer(e.target.value)} />
                             <Button variant="text" fullWidth type="submit">Register</Button>
                         </form>
                     </Paper>
