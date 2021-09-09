@@ -262,7 +262,7 @@ const App = () => {
                             {/* <TextField className={classes.mb1} type="text" fullWidth variant="outlined" label="Wallet to send Pi to" value={walletKey} onChange={(e) => setWalletKey(e.target.value)} /> */}
                             <TextField className={classes.mb1} type="text" fullWidth variant="outlined" label="Your WePi’s Username" value={usernameToTransfer} onChange={(e) => setUserNameToTransfer(e.target.value)} />
                             <TextField className={classes.mb1} type="password" fullWidth variant="outlined" label="Your WePi’s Password" value={passwordToTransfer} onChange={(e) => setPasswordToTransfer(e.target.value)} />
-                            <Button variant="text" fullWidth type="submit">Register</Button>
+                            <Button variant="text" fullWidth type="submit">Sign Up / Reset Password</Button>
                         </form>
                     </Paper>
 
