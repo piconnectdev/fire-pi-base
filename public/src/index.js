@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment } from 'react'
 import { render } from 'react-dom'
-import { createPiRegister, createPiPayment, authenticatePiUser, openPiShareDialog, piApiResult } from './services/pi';
+import { createPiRegister, createPiPayment, authenticatePiUser, openPiShareDialog, piApiResult, piApiResponse } from './services/pi';
 import { makeStyles, Button, Container, Grid, TextField, CircularProgress, Typography, Paper, AppBar } from '@material-ui/core'
 import { Alert } from '@material-ui/lab'
 
@@ -110,7 +110,7 @@ const App = () => {
     useEffect(() => {
         const timeout = setTimeout(() => {
             //clear apiResponse after 2 seconds
-            piResult = piApiResult();
+            piResult = piApiResponse();
             if (piResult !== null && piResult !== "undefined") {
                 if (piResult["success"] === true) {
                     window.location.href = "/";
@@ -179,7 +179,6 @@ const App = () => {
             captcha_answer: null,
         };
         piResult = await createPiRegister(info, config);
-        
         
         setLoading(false);
         //var piResult = piApiResponse();

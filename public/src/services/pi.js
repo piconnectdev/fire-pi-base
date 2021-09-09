@@ -16,7 +16,11 @@ export const authenticatePiUser = async () => {
     }
 }
 
-export const piApiResult = async () => {
+export const piApiResponse = async () => {
+    if (piApiResult === null)
+       return null;
+    if (!piApiResult.success)
+       return null;
     return piApiResult;    
 }
 
@@ -53,7 +57,7 @@ export const createPiRegister = async (info, config) => {
         onReadyForServerCompletion:(payment_id, txid) => onReadyForCompletionRegister(payment_id, txid, info, config),
         onCancel,
         onError,
-      });
+      });      
     return piApiResult;
 }
 
@@ -100,8 +104,9 @@ export const onReadyForCompletionRegister = async (payment_id, txid, info, payme
 
     if (status === 200) {
         //payment was completed continue with flow
-        piApiResult["success"] = true;
-        piApiResult["type"] = "account";
+        piApiResult.success = true;
+        piApiResult.type = "account";
+        piApiResult.data = data;
         return true;
     }
     return true;
@@ -153,8 +158,9 @@ export const onReadyForCompletion = async (payment_id, txid) => {
 
     if (status === 200) {
         //payment was completed continue with flow
-        piApiResult["success"] = true;
-        piApiResult["type"] = "tip";
+        piApiResult.success = true;
+        piApiResult.type = "payment";
+        piApiResult.data = data;
         return true;
     }
 }
