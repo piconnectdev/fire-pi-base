@@ -111,11 +111,18 @@ const App = () => {
         const timeout = setTimeout(() => {
             //clear apiResponse after 2 seconds
             piResult = piApiResult();
-            if (piResult !== null) {
+            if (piResult !== null && piResult !== "undefined") {
                 if (piResult["success"] === true) {
-                    window.location.href = "https://wepi.social";
+                    window.location.href = "/";
                 }
             }
+           if (!(apiResponse === null || apiResponse === "undefined")) {
+           } else {
+               if (apiResponse.success)
+               {
+                    //window.location.href = "/";
+               }
+           }
             setApiResponse(null)
         }, 3000)
 
@@ -173,6 +180,22 @@ const App = () => {
         };
         piResult = await createPiRegister(info, config);
         
+        
+        setLoading(false);
+        //var piResult = piApiResponse();
+        /*
+        if ((piResult === null || piResult === "undefined")) {
+        } else {
+            //if (piResult.success) 
+            {
+                setApiResponse({
+                message: 'Payment complete!',
+                        status: 'success'
+                });
+                window.location.href = "/";
+            }
+        }
+        */
         //if (isDev) {
         //    setApiResponse({
         //        message: 'Payment complete!',
@@ -180,8 +203,7 @@ const App = () => {
         //    });
         //}
 
-        setLoading(false);
-        if (piResult !== null) {
+        if (piResult !== null|| piResult === "undefined") {
             window.location.href="/";
         }
     }
