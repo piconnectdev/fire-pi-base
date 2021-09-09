@@ -25,7 +25,9 @@ export const piApiResponse = async () => {
        return null;   
     //if (piApiResult.success === null)
     //   return null;
-    return piApiResult;    
+    var res = piApiResult;
+    piApiResult = null;
+    return res;    
 }
 
 export const onIncompletePaymentFound = async (payment) => { 

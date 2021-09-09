@@ -108,23 +108,9 @@ const App = () => {
 
     //on apiResponse updated
     useEffect(() => {
-        const timeout = setTimeout(() => {
-            //clear apiResponse after 2 seconds
-            var piResult = piApiResponse();
-            if (piResult !== null && piResult !== "undefined") {
-                if (piResult["success"] === true) {
-                    window.location.href = "/";
-                }
-            }
-        //    if (!(apiResponse === null || apiResponse === "undefined")) {
-        //    } else {
-        //        if (apiResponse.success)
-        //        {
-        //             //window.location.href = "/";
-        //        }
-        //    }
+        const timeout = setTimeout(() => {            
             setApiResponse(null)
-        }, 3000)
+        }, 5000)
 
         //clean up
         return () => {
@@ -132,6 +118,18 @@ const App = () => {
             clearTimeout(timeout)
         }
     }, [apiResponse])
+
+    const timer = setInterval(() => {
+        var piResult = piApiResponse();
+        if (piResult !== null && piResult !== undefined && piResult !== "undefined") {
+            if (piResult.success === true)
+            {
+                //alert("R1:"+ JSON.stringify(piResult));
+                clearInterval(timer);                
+                window.location.href = "/";
+            }
+        }
+    }, 1000);
 
     const piPayment = async (e) => {
         e.preventDefault();
@@ -163,7 +161,7 @@ const App = () => {
         //create pi network payment
         var config = {
             amount: "0.01",
-            memo: 'wepi:acc:'+usernameToTransfer,
+            memo: 'wepi:acc:' + usernameToTransfer,
             metadata: {
                 ref_id: "",
             }
@@ -178,34 +176,10 @@ const App = () => {
             captcha_uuid: null,
             captcha_answer: null,
         };
-        
-        var piResult = await createPiRegister(info, config);
+
+        await createPiRegister(info, config);
         
         setLoading(false);
-        //var piResult = piApiResponse();
-        /*
-        if ((piResult === null || piResult === "undefined")) {
-        } else {
-            //if (piResult.success) 
-            {
-                setApiResponse({
-                message: 'Payment complete!',
-                        status: 'success'
-                });
-                window.location.href = "/";
-            }
-        }
-        */
-        //if (isDev) {
-        //    setApiResponse({
-        //        message: 'Payment complete!',
-        //        status: 'success'
-        //    });
-        //}
-
-        if (piResult !== null|| piResult === "undefined") {
-            window.location.href="/";
-        }
     }
 
     const openDialog = () => {
