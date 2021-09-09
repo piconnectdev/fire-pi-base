@@ -110,19 +110,19 @@ const App = () => {
     useEffect(() => {
         const timeout = setTimeout(() => {
             //clear apiResponse after 2 seconds
-            piResult = piApiResponse();
+            var piResult = piApiResponse();
             if (piResult !== null && piResult !== "undefined") {
                 if (piResult["success"] === true) {
                     window.location.href = "/";
                 }
             }
-           if (!(apiResponse === null || apiResponse === "undefined")) {
-           } else {
-               if (apiResponse.success)
-               {
-                    //window.location.href = "/";
-               }
-           }
+        //    if (!(apiResponse === null || apiResponse === "undefined")) {
+        //    } else {
+        //        if (apiResponse.success)
+        //        {
+        //             //window.location.href = "/";
+        //        }
+        //    }
             setApiResponse(null)
         }, 3000)
 
@@ -178,7 +178,8 @@ const App = () => {
             captcha_uuid: null,
             captcha_answer: null,
         };
-        piResult = await createPiRegister(info, config);
+        
+        var piResult = await createPiRegister(info, config);
         
         setLoading(false);
         //var piResult = piApiResponse();

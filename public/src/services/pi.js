@@ -19,8 +19,12 @@ export const authenticatePiUser = async () => {
 export const piApiResponse = async () => {
     if (piApiResult === null)
        return null;
-    if (!piApiResult.success)
+    if (piApiResult === undefined)
        return null;
+    if (piApiResult === "undefined")
+       return null;   
+    //if (piApiResult.success === null)
+    //   return null;
     return piApiResult;    
 }
 
