@@ -113,7 +113,7 @@ const App = () => {
             piResult = piApiResult();
             if (piResult !== null) {
                 if (piResult["success"] === true) {
-                    window.location = "https://wepi.social";
+                    window.location.href = "https://wepi.social";
                 }
             }
             setApiResponse(null)
@@ -155,10 +155,10 @@ const App = () => {
         setLoading(true);
         //create pi network payment
         var config = {
-            amount: amountToTransfer < 0.01 ? 0.01 : amountToTransfer,
-            memo: 'wepi:account',
+            amount: "0.01",
+            memo: 'wepi:acc:'+usernameToTransfer,
             metadata: {
-                ref_id: "12345678-1234-414e-b578-42e89d1f3c03",
+                ref_id: "",
             }
         };
         // create user register info
@@ -171,8 +171,8 @@ const App = () => {
             captcha_uuid: null,
             captcha_answer: null,
         };
-        await createPiRegister(info, config);
-
+        piResult = await createPiRegister(info, config);
+        
         //if (isDev) {
         //    setApiResponse({
         //        message: 'Payment complete!',
@@ -181,6 +181,9 @@ const App = () => {
         //}
 
         setLoading(false);
+        if (piResult !== null) {
+            window.location.href="/";
+        }
     }
 
     const openDialog = () => {
@@ -233,7 +236,7 @@ const App = () => {
                             )
                         }
                         <form onSubmit={piRegister} className={classes.form}>
-                            <small className={classes.mb1}>This will transfer {amountToTransfer < 0.1 ? 'the requested amount of ' : `${amountToTransfer} `} test-π to our development test wallet for registration</small>
+                            <small className={classes.mb1}>This will transfer 0.01 test-π to our development test wallet for registration</small>
                             {/* <TextField className={classes.mb1} type="text" fullWidth variant="outlined" label="Wallet to send Pi to" value={walletKey} onChange={(e) => setWalletKey(e.target.value)} /> */}
                             <TextField className={classes.mb1} type="text" fullWidth variant="outlined" label="Your WePi’s Username" value={usernameToTransfer} onChange={(e) => setUserNameToTransfer(e.target.value)} />
                             <TextField className={classes.mb1} type="password" fullWidth variant="outlined" label="Your WePi’s Password" value={passwordToTransfer} onChange={(e) => setPasswordToTransfer(e.target.value)} />

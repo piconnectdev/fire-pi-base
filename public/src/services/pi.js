@@ -54,6 +54,7 @@ export const createPiRegister = async (info, config) => {
         onCancel,
         onError,
       });
+    return piApiResult;
 }
 
 export const onReadyForApprovalRegister = async (payment_id, info, paymentConfig) => {
@@ -69,20 +70,20 @@ export const onReadyForApprovalRegister = async (payment_id, info, paymentConfig
 
     if (status === 500) {
         //there was a problem approving this payment show user body.message from server
-        alert(`${body.status}: ${body.message}`);
+        alert(`${data.status}: ${data.message}`);
         return false;
     } 
 
     if (status === 200) {
         //payment was approved continue with flow
-        return data;
+        return true;
     }
 }
 
 // Update or change password
 export const onReadyForCompletionRegister = async (payment_id, txid, info, paymentConfig) => {
     //make POST request to your app server /payments/complete endpoint with paymentId and txid in the body
-    const { body, status } = await axios.post('/pi/register', {
+    const { data, status } = await axios.post('/pi/register', {
         paymentid: payment_id,
         pi_username: piUser.user.username,
         pi_uid: piUser.user.uid,
@@ -93,7 +94,7 @@ export const onReadyForCompletionRegister = async (payment_id, txid, info, payme
 
     if (status === 500) {
         //there was a problem completing this payment show user body.message from server
-        alert(`${body.status}: ${body.message}`);
+        alert(`${data.status}: ${data.message}`);
         return false;
     } 
 
@@ -103,6 +104,7 @@ export const onReadyForCompletionRegister = async (payment_id, txid, info, payme
         piApiResult["type"] = "account";
         return true;
     }
+    return true;
 }
 
 export const createPiPayment = async (config) => {
@@ -138,14 +140,14 @@ export const onReadyForApproval = async (payment_id, paymentConfig) => {
 
 export const onReadyForCompletion = async (payment_id, txid) => {
     //make POST request to your app server /pi/complete endpoint with paymentId and txid in the body
-    const { body, status } = await axios.post('/pi/complete', {
+    const { data, status } = await axios.post('/pi/complete', {
         payment_id, 
         txid
     })
 
     if (status === 500) {
         //there was a problem completing this payment show user body.message from server
-        alert(`${body.status}: ${body.message}`);
+        alert(`${data.status}: ${data.message}`);
         return false;
     } 
 
