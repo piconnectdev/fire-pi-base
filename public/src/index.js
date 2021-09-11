@@ -160,8 +160,8 @@ const App = () => {
         setLoading(true);
         //create pi network payment
         var config = {
-            amount: "0.01",
-            memo: 'wepi:acc:' + usernameToTransfer,
+            amount: 0.01,
+            memo: 'wepi:account',
             metadata: {
                 ref_id: "",
             }
