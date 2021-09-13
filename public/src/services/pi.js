@@ -23,18 +23,19 @@ export const piApiResponse = async () => {
        return null;
     if (piApiResult === "undefined")
        return null;   
-    //if (piApiResult.success === null)
-    //   return null;
-    var res = piApiResult;
-    piApiResult = null;
+    if (piApiResult.success === null)
+       return null;
+    //var res = piApiResult;
+    //piApiResult = null;
+    return piApiResult;
     return res;    
 }
 
 export const onIncompletePaymentFound = async (payment) => { 
     //do something with incompleted payment
     console.log('incomplete payment found: ', payment) 
-    alert(payment);
-    const { data, status } = await axios.post('/pi/found', {
+    //alert(payment);
+    const { data } = await axios.post('/pi/found', {
         paymentid: payment.identifier,
 	    pi_username: piUser.user.username,
 	    pi_uid: piUser.user.uid,
@@ -42,21 +43,21 @@ export const onIncompletePaymentFound = async (payment) => {
         dto: null
     });
 
-    if (status === 500) {
+    if (data.status === 500) {
         //there was a problem approving this payment show user body.message from server
-        alert(`${body.status}: ${body.message}`);
+        //alert(`${data.status}: ${data.message}`);
         return false;
     } 
 
-    if (status === 200) {
+    if (data.status === 200) {
         //payment was approved continue with flow
-        alert(payment);
+        //alert(payment);
         return data;
     }
 }; // Read more about this in the SDK reference
 
 export const createPiRegister = async (info, config) => {
-    piApiResult = null;
+    piApiResult = {};
     Pi.createPayment(config, {
         // Callbacks you need to implement - read more about those in the detailed docs linked below:
         onReadyForServerApproval: (payment_id) => onReadyForApprovalRegister(payment_id, info, config),
@@ -70,7 +71,7 @@ export const createPiRegister = async (info, config) => {
 export const onReadyForApprovalRegister = async (payment_id, info, paymentConfig) => {
     //make POST request to your app server /payments/approve endpoint with paymentId in the body
     
-    const { data, status } = await axios.post('/pi/agree', {
+    const { data } = await axios.post('/pi/agree', {
 	    paymentid: payment_id,
 	    pi_username: piUser.user.username,
 	    pi_uid: piUser.user.uid,
@@ -78,13 +79,13 @@ export const onReadyForApprovalRegister = async (payment_id, info, paymentConfig
         paymentConfig
     })
 
-    if (status === 500) {
+    if (data.status === 500) {
         //there was a problem approving this payment show user body.message from server
-        alert(`${data.status}: ${data.message}`);
+        //alert(`${data.status}: ${data.message}`);
         return false;
     } 
 
-    if (status === 200) {
+    if (data.status >= 200 && data.status < 300) {
         //payment was approved continue with flow
         return true;
     }
@@ -93,7 +94,7 @@ export const onReadyForApprovalRegister = async (payment_id, info, paymentConfig
 // Update or change password
 export const onReadyForCompletionRegister = async (payment_id, txid, info, paymentConfig) => {
     //make POST request to your app server /payments/complete endpoint with paymentId and txid in the body
-    const { data, status } = await axios.post('/pi/register', {
+    const { data } = await axios.post('/pi/register', {
         paymentid: payment_id,
         pi_username: piUser.user.username,
         pi_uid: piUser.user.uid,
@@ -102,24 +103,26 @@ export const onReadyForCompletionRegister = async (payment_id, txid, info, payme
 	    paymentConfig,
     })
 
-    if (status === 500) {
+    if (data.status === 500) {
         //there was a problem completing this payment show user body.message from server
-        alert(`${data.status}: ${data.message}`);
+        //alert(`${data.status}: ${data.message}`);
         return false;
     } 
 
-    if (status === 200) {
+    if (data.status = 200 && data.status < 300) {
         //payment was completed continue with flow
+        // Set call successed.
+        piApiResult = {};
         piApiResult.success = true;
         piApiResult.type = "account";
-        piApiResult.data = data;
+        //piApiResult.data = data;
         return true;
     }
     return true;
 }
 
 export const createPiPayment = async (config) => {
-    piApiResult = null;
+    piApiResult = {};
     Pi.createPayment(config, {
         // Callbacks you need to implement - read more about those in the detailed docs linked below:
         onReadyForServerApproval: (payment_id) => onReadyForApproval(payment_id, config),
@@ -132,18 +135,18 @@ export const createPiPayment = async (config) => {
 export const onReadyForApproval = async (payment_id, paymentConfig) => {
     //make POST request to your app server /pi/approve endpoint with paymentId in the body
     
-    const { data, status } = await axios.post('/pi/approve', {
+    const { data } = await axios.post('/pi/approve', {
         payment_id,
         paymentConfig
     })
 
-    if (status === 500) {
+    if (data.status === 500) {
         //there was a problem approving this payment show user body.message from server
-        alert(`${body.status}: ${body.message}`);
+        //alert(`${body.status}: ${body.message}`);
         return false;
     } 
 
-    if (status === 200) {
+    if (data.status === 200) {
         //payment was approved continue with flow
         return data;
     }
@@ -151,22 +154,22 @@ export const onReadyForApproval = async (payment_id, paymentConfig) => {
 
 export const onReadyForCompletion = async (payment_id, txid) => {
     //make POST request to your app server /pi/complete endpoint with paymentId and txid in the body
-    const { data, status } = await axios.post('/pi/complete', {
+    const { data } = await axios.post('/pi/complete', {
         payment_id, 
         txid
     })
 
-    if (status === 500) {
+    if (data.status === 500) {
         //there was a problem completing this payment show user body.message from server
-        alert(`${data.status}: ${data.message}`);
+        //alert(`${data.status}: ${data.message}`);
         return false;
     } 
 
-    if (status === 200) {
+    if (data.status >= 200 && data.status < 300) {
         //payment was completed continue with flow
+        piApiResult = {};
         piApiResult.success = true;
         piApiResult.type = "payment";
-        piApiResult.data = data;
         return true;
     }
 }
