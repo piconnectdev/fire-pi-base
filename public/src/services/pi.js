@@ -109,7 +109,7 @@ export const onReadyForCompletionRegister = async (payment_id, txid, info, payme
         return false;
     } 
 
-    if (data.status = 200 && data.status < 300) {
+    if (data.status >= 200 && data.status < 300) {
         //payment was completed continue with flow
         // Set call successed.
         piApiResult = {};

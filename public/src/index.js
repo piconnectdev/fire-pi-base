@@ -119,8 +119,8 @@ const App = () => {
         }
     }, [apiResponse])
 
-    const timer = setInterval(() => {
-        var piResult = piApiResponse();
+    const timer = setInterval(async () => {
+        var piResult = await piApiResponse();
         if (piResult !== null && piResult !== undefined && piResult !== "undefined") {
             if (piResult.success === true)
             {
