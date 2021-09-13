@@ -23,12 +23,7 @@ export const piApiResponse = async () => {
        return null;
     if (piApiResult === "undefined")
        return null;   
-    if (piApiResult.success === null)
-       return null;
-    //var res = piApiResult;
-    //piApiResult = null;
     return piApiResult;
-    return res;    
 }
 
 export const onIncompletePaymentFound = async (payment) => { 
@@ -92,32 +87,26 @@ export const onReadyForApprovalRegister = async (payment_id, info, paymentConfig
 }
 
 // Update or change password
-export const onReadyForCompletionRegister = async (payment_id, txid, info, paymentConfig) => {
+export const onReadyForCompletionRegister = (payment_id, txid, info, paymentConfig) => {
     //make POST request to your app server /payments/complete endpoint with paymentId and txid in the body
-    const { data } = await axios.post('/pi/register', {
+    axios.post('/pi/register', {
         paymentid: payment_id,
         pi_username: piUser.user.username,
         pi_uid: piUser.user.uid,
         txid,
 	    info,
 	    paymentConfig,
-    })
-
-    if (data.status === 500) {
-        //there was a problem completing this payment show user body.message from server
-        //alert(`${data.status}: ${data.message}`);
-        return false;
-    } 
-
-    if (data.status >= 200 && data.status < 300) {
-        //payment was completed continue with flow
-        // Set call successed.
-        piApiResult = {};
-        piApiResult.success = true;
-        piApiResult.type = "account";
-        //piApiResult.data = data;
-        return true;
-    }
+    }).then((data) => {
+        if (data.status >= 200 && data.status < 300) {
+            //payment was completed continue with flow
+            // Set call successed.
+            piApiResult = {};
+            piApiResult.success = true;
+            piApiResult.type = "account";
+            //piApiResult.data = data;
+            return true;
+        }
+    });
     return true;
 }
 
