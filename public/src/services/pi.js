@@ -122,22 +122,17 @@ export const createPiPayment = async (config) => {
 }
 
 export const onReadyForApproval = async (payment_id, paymentConfig) => {
-    //make POST request to your app server /pi/approve endpoint with paymentId in the body
-    
+    //make POST request to your app server /pi/approve endpoint with paymentId in the body    
     const { data } = await axios.post('/pi/approve', {
         payment_id,
         paymentConfig
     })
 
-    if (data.status === 500) {
-        //there was a problem approving this payment show user body.message from server
-        //alert(`${body.status}: ${body.message}`);
-        return false;
-    } 
-
-    if (data.status === 200) {
+    if (data.status >= 200 && data.status < 300) {
         //payment was approved continue with flow
         return data;
+    } else {
+        alert("Approve error: " + JSON.stringify(data.data));
     }
 }
 
@@ -148,34 +143,33 @@ export const onReadyForCompletion = async (payment_id, txid) => {
         txid
     })
 
-    if (data.status === 500) {
-        //there was a problem completing this payment show user body.message from server
-        //alert(`${data.status}: ${data.message}`);
-        return false;
-    } 
-
     if (data.status >= 200 && data.status < 300) {
         //payment was completed continue with flow
         piApiResult = {};
         piApiResult.success = true;
         piApiResult.type = "payment";
         return true;
+    } else {
+        alert("Completed error: " + JSON.stringify(data.data));
     }
 }
 
 export const onCancelRegister = (paymentId) => {
-    console.log('payment cancelled', paymentId)
+    console.log('Register cancelled', paymentId)
 }
 
 export const onErrorRegister = (error, paymentId) => { 
-    console.log('onError', error, paymentId) 
+    console.log('Register error ', error, paymentId) 
+    alert("Register Error, id:" + paymentId + ", err:" + JSON.stringify(error));
 }
+
 export const onCancel = (paymentId) => {
-    console.log('payment cancelled', paymentId)
+    console.log('Payment cancelled', paymentId)
 }
 
 export const onError = (error, paymentId) => { 
-    console.log('onError', error, paymentId) 
+    console.log('Payment error', error, paymentId) 
+    alert("Payment Error, id:" + paymentId + ", err:" + JSON.stringify(error));
 }
 
 export const openPiShareDialog = (title, message) => {

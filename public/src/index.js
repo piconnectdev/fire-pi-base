@@ -136,21 +136,17 @@ const App = () => {
         setLoading(true);
         //create pi network payment
         var config = {
-            amount: amountToTransfer,
-            memo: 'wepi:payment',
+            amount: 0.1,
+            memo: 'wepi:tip:admin',
             metadata: {
-                receipt_name: "",
-                comment: "Comment",
+                address: 'GAP77FWIKZ5FUUZBM2MEARRYKXWK4W7FYRZPXWGTES3TS5ZS6B4CYNRT',
+                id: "017bb118-4ca1-2f81-0bca-76dc38e1eb80",                
+                post_id: "017bb17d-e09e-28b1-0d30-d8079047dd80",
+                t: '2021-09-04T15:47:01.918651',
+                u: null,
             }
         };
         await createPiPayment(config);
-
-        //if (isDev) {
-        //    setApiResponse({
-        //        message: 'Payment complete!',
-        //        status: 'success'
-        //    });
-        //}
 
         setLoading(false);
     }
@@ -231,12 +227,14 @@ const App = () => {
                                 </div>
                             )
                         }
+                        <Alert severity="warning">WePi’s username and password do not need to match Pi’s username and password.</Alert>
                         <form onSubmit={piRegister} className={classes.form}>
                             <small className={classes.mb1}>This will transfer 0.01 test-π to our development test wallet for registration</small>
                             {/* <TextField className={classes.mb1} type="text" fullWidth variant="outlined" label="Wallet to send Pi to" value={walletKey} onChange={(e) => setWalletKey(e.target.value)} /> */}
                             <TextField className={classes.mb1} type="text" fullWidth variant="outlined" label="Your WePi’s Username" value={usernameToTransfer} onChange={(e) => setUserNameToTransfer(e.target.value)} />
                             <TextField className={classes.mb1} type="password" fullWidth variant="outlined" label="Your WePi’s Password" value={passwordToTransfer} onChange={(e) => setPasswordToTransfer(e.target.value)} />
                             <Button variant="text" fullWidth type="submit">Sign Up / Reset Password</Button>
+                            {/* <Button variant="text" fullWidth onclick="piPayment">Tip</Button> */}
                         </form>
                     </Paper>
 
