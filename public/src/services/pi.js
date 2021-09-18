@@ -72,17 +72,13 @@ export const onReadyForApprovalRegister = async (payment_id, info, paymentConfig
 	    pi_uid: piUser.user.uid,
 	    info,
         paymentConfig
-    })
-
-    if (data.status === 500) {
-        //there was a problem approving this payment show user body.message from server
-        //alert(`${data.status}: ${data.message}`);
-        return false;
-    } 
+    }) 
 
     if (data.status >= 200 && data.status < 300) {
         //payment was approved continue with flow
         return true;
+    } else {
+        alert("Approve transaction error: " + JSON.stringify(data.data));
     }
 }
 
@@ -105,6 +101,8 @@ export const onReadyForCompletionRegister = (payment_id, txid, info, paymentConf
             piApiResult.type = "account";
             //piApiResult.data = data;
             return true;
+        } else {
+            alert("Register transaction error: " + JSON.stringify(data.data));
         }
     });
     return true;

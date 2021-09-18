@@ -215,6 +215,7 @@ const App = () => {
                         </div>
                     </section>
                     <hr className={classes.mb1} />
+                    <Alert severity="warning">WePi’s username and password do not need to match Pi’s username and password.</Alert>
                     <Paper className={[classes.paper, classes.mb1]}>
                         <div style={{ margin: '0 0 1em' }}>
                             <Typography>Registration / Reset Password</Typography>
@@ -227,9 +228,8 @@ const App = () => {
                                 </div>
                             )
                         }
-                        <Alert severity="warning">WePi’s username and password do not need to match Pi’s username and password.</Alert>
                         <form onSubmit={piRegister} className={classes.form}>
-                            <small className={classes.mb1}>This will transfer 0.01 test-π to our development test wallet for registration</small>
+                            <small className={classes.mb1}>This will transfer 0.01 test-π to our development test wallet for registration.</small>
                             {/* <TextField className={classes.mb1} type="text" fullWidth variant="outlined" label="Wallet to send Pi to" value={walletKey} onChange={(e) => setWalletKey(e.target.value)} /> */}
                             <TextField className={classes.mb1} type="text" fullWidth variant="outlined" label="Your WePi’s Username" value={usernameToTransfer} onChange={(e) => setUserNameToTransfer(e.target.value)} />
                             <TextField className={classes.mb1} type="password" fullWidth variant="outlined" label="Your WePi’s Password" value={passwordToTransfer} onChange={(e) => setPasswordToTransfer(e.target.value)} />
