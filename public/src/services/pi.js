@@ -67,7 +67,7 @@ export const createPiRegister = async (info, config) => {
 export const onReadyForApprovalRegister = async (payment_id, info, paymentConfig) => {
     //make POST request to your app server /payments/approve endpoint with paymentId in the body
     try {
-        const { data } = await axios.post('/pi/agree', {
+        const { data, status } = await axios.post('/pi/agree', {
             paymentid: payment_id,
             pi_username: piUser.user.username,
             pi_uid: piUser.user.uid,
@@ -75,8 +75,18 @@ export const onReadyForApprovalRegister = async (payment_id, info, paymentConfig
             paymentConfig
         }) 
         //alert("Agree transaction response: " + JSON.stringify(data));
-        if (data.status >= 200 && data.status < 300) {
+        if (status >= 200 && status < 300) {
             //payment was approved continue with flow
+            if (data.success === true) {
+                piApiResult.approved = true;
+                return;
+            } else {
+                if (data.success === true) {
+                    piApiResult.approved = true;
+                    return;
+                }
+                alert("Error: " + JSON.stringify(data.extra));
+            }
             piApiResult.approved = true;
             return;
         } else {
