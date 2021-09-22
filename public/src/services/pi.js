@@ -53,6 +53,7 @@ export const onIncompletePaymentFound = async (payment) => {
 
 export const createPiRegister = async (info, config) => {
     piApiResult = {};
+    piApiResult.approved = false;
     Pi.createPayment(config, {
         // Callbacks you need to implement - read more about those in the detailed docs linked below:
         onReadyForServerApproval: (payment_id) => onReadyForApprovalRegister(payment_id, info, config),
@@ -65,51 +66,64 @@ export const createPiRegister = async (info, config) => {
 
 export const onReadyForApprovalRegister = async (payment_id, info, paymentConfig) => {
     //make POST request to your app server /payments/approve endpoint with paymentId in the body
-    
-    const { data } = await axios.post('/pi/agree', {
-	    paymentid: payment_id,
-	    pi_username: piUser.user.username,
-	    pi_uid: piUser.user.uid,
-	    info,
-        paymentConfig
-    }) 
+    try {
+        const { data } = await axios.post('/pi/agree', {
+            paymentid: payment_id,
+            pi_username: piUser.user.username,
+            pi_uid: piUser.user.uid,
+            info,
+            paymentConfig
+        }) 
 
-    if (data.status >= 200 && data.status < 300) {
-        //payment was approved continue with flow
-        return true;
-    } else {
-        alert("Approve transaction error: " + JSON.stringify(data.data));
+        if (data.status >= 200 && data.status < 300) {
+            //payment was approved continue with flow
+            piApiResult.approved = true;
+            return;
+        } else {
+            alert("Agree transaction error: " + JSON.stringify(data));
+        }
+    } catch(err) {
+        alert("Agree transaction catch error: " + JSON.stringify(data));
+        piApiResult.approved = false;
     }
 }
 
 // Update or change password
 export const onReadyForCompletionRegister = (payment_id, txid, info, paymentConfig) => {
     //make POST request to your app server /payments/complete endpoint with paymentId and txid in the body
-    axios.post('/pi/register', {
-        paymentid: payment_id,
-        pi_username: piUser.user.username,
-        pi_uid: piUser.user.uid,
-        txid,
-	    info,
-	    paymentConfig,
-    }).then((data) => {
-        if (data.status >= 200 && data.status < 300) {
-            //payment was completed continue with flow
-            // Set call successed.
-            piApiResult = {};
-            piApiResult.success = true;
-            piApiResult.type = "account";
-            //piApiResult.data = data;
-            return true;
-        } else {
-            alert("Register transaction error: " + JSON.stringify(data.data));
+    if (piApiResult.approved === true ) {
+        try {
+        axios.post('/pi/register', {
+            paymentid: payment_id,
+            pi_username: piUser.user.username,
+            pi_uid: piUser.user.uid,
+            txid,
+            info,
+            paymentConfig,
+        }).then((data) => {
+            if (data.status >= 200 && data.status < 300) {
+                //payment was completed continue with flow
+                // Set call successed.
+                piApiResult = {};
+                piApiResult.success = true;
+                piApiResult.type = "account";
+                return;
+            } else {
+                alert("Register transaction error: " + JSON.stringify(data));
+            }
+        });
+        } catch(err) {
+            alert("Register transaction catch error: " + JSON.stringify(data));
         }
-    });
-    return true;
+    } else {
+        alert("Registration was not approved : " + JSON.stringify(data));   
+    }
+    return;
 }
 
 export const createPiPayment = async (config) => {
     piApiResult = {};
+    piApiResult.approved = false;
     Pi.createPayment(config, {
         // Callbacks you need to implement - read more about those in the detailed docs linked below:
         onReadyForServerApproval: (payment_id) => onReadyForApproval(payment_id, config),
