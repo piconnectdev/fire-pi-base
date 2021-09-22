@@ -58,8 +58,8 @@ export const createPiRegister = async (info, config) => {
         // Callbacks you need to implement - read more about those in the detailed docs linked below:
         onReadyForServerApproval: (payment_id) => onReadyForApprovalRegister(payment_id, info, config),
         onReadyForServerCompletion:(payment_id, txid) => onReadyForCompletionRegister(payment_id, txid, info, config),
-        onCancel,
-        onError,
+        onCancelRegister,
+        onErrorRegister,
       });      
     return piApiResult;
 }
@@ -74,7 +74,7 @@ export const onReadyForApprovalRegister = async (payment_id, info, paymentConfig
             info,
             paymentConfig
         }) 
-
+        //alert("Agree transaction response: " + JSON.stringify(data));
         if (data.status >= 200 && data.status < 300) {
             //payment was approved continue with flow
             piApiResult.approved = true;
@@ -101,12 +101,17 @@ export const onReadyForCompletionRegister = (payment_id, txid, info, paymentConf
             info,
             paymentConfig,
         }).then((data) => {
+            //alert("Register transaction response: " + JSON.stringify(data));
             if (data.status >= 200 && data.status < 300) {
                 //payment was completed continue with flow
                 // Set call successed.
                 piApiResult = {};
-                piApiResult.success = true;
                 piApiResult.type = "account";
+                if (data.data.success === true) {
+                    piApiResult.success = true;
+                } else {
+                    alert("Register transaction error: " + JSON.stringify(data));
+                }
                 return;
             } else {
                 alert("Register transaction error: " + JSON.stringify(data));
@@ -168,6 +173,7 @@ export const onReadyForCompletion = async (payment_id, txid) => {
 
 export const onCancelRegister = (paymentId) => {
     console.log('Register cancelled', paymentId)
+    alert("Register Error, id:" + paymentId + ", err:" + JSON.stringify(error));
 }
 
 export const onErrorRegister = (error, paymentId) => { 
